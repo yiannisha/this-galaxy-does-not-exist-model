@@ -109,7 +109,7 @@ class Trainer:
         for epoch in range(epochs):
             for real_images, _ in self.dataloader:
                 # Train discriminator
-                loss_d, real_score, fake_score = self.train_discriminator(real_images, opt_d)
+                loss_d, real_score, fake_score = self.train_discriminator(opt_d, real_images)
                 # Train generator
                 loss_g = self.train_generator(opt_g)
                 
