@@ -11,7 +11,7 @@ if __name__ == '__main__':
     print('device: ', device)
     
     # set hyperparameters
-    batch_size = 1
+    batch_size = 128
     latent_size = 2048
     
     # create new models
@@ -22,9 +22,9 @@ if __name__ == '__main__':
     hugging_face_dataset = download()
     dataset = NebulaDataset(hugging_face_dataset)
     
-    subset = Subset(dataset, range(0, 10))
+    # subset = Subset(dataset, range(0, 10))
     
     # train the models
-    trainer = Trainer(discr, gen, subset, latent_size, batch_size, device)
+    trainer = Trainer(discr, gen, dataset, latent_size, batch_size, device)
     
     trainer.fit(epochs=25, lr=0.0002, start_idx=1)
