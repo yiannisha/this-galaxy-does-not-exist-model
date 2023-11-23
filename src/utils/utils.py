@@ -19,7 +19,7 @@ def to_device (data: Any, device: torch.device) -> Any:
         return [to_device(x, device) for x in data]
     return data.to(device, non_blocking=True)
 
-def save_samples(index: int, generator: nn.Model, discriminator: nn.Model, latent_size: int) -> None:
+def save_samples(index: int, generator: nn.Module, discriminator: nn.Module, latent_size: int) -> None:
     '''
     Saves fake images from the generator & model checkpoints.
     '''

@@ -1,8 +1,16 @@
 import torch
 import torch.nn as nn
 
-def discriminator () -> nn.Sequential:
-    return nn.Sequential(
+class Discriminator (nn.Module):
+    '''
+    Discriminator model.
+    Classifies images as real or fake.
+    '''
+    
+    def __init__ (self) -> None:
+        super().__init__()
+        
+        self.network = nn.Sequential(
         # in: 3 x 512 x 512
         
         nn.Conv2d(3, 16, kernel_size=4, stride=2, padding=1, bias=False),
@@ -46,3 +54,6 @@ def discriminator () -> nn.Sequential:
         nn.Flatten(),
         nn.Sigmoid()
     )
+
+    def forward (self, x: torch.Tensor) -> torch.Tensor:
+        return self.network(x)

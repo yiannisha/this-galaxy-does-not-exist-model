@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 
-from . import to_device
+from .utils import to_device
 
 from typing import Tuple, Union, Any, Generator
 

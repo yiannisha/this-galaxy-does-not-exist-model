@@ -4,7 +4,7 @@ from torch.nn import functional as F
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms as T
 
-from src.utils import get_device, save_samples, DeviceDataLoader
+from utils import get_device, save_samples, DeviceDataLoader
 
 from typing import Tuple, List
 
@@ -13,7 +13,7 @@ class Trainer:
     A class for training the model.
     '''
     
-    def __init__ ( self, discriminator: nn.Model, generator: nn.Model, dataset: Dataset, latent_size: int, batch_size: int ) -> None:
+    def __init__ ( self, discriminator: nn.Module, generator: nn.Module, dataset: Dataset, latent_size: int, batch_size: int ) -> None:
         '''
         :param discriminator: The discriminator model.
         :param generator: The generator model.
