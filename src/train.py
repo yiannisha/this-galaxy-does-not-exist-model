@@ -18,6 +18,6 @@ if __name__ == '__main__':
     dataset = NebulaDataset(hugging_face_dataset[:10])
     
     # train the models
-    trainer = Trainer(disc, gen, dataset, latent_size, batch_size)
+    trainer = Trainer(discr, gen, dataset, latent_size, batch_size)
     
     trainer.fit(epochs=25, lr=0.0002, start_idx=1)
