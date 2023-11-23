@@ -37,6 +37,10 @@ def save_samples(index: int, generator: nn.Module, discriminator: nn.Module, lat
     torch.save(generator.state_dict(), os.path.join(dirpath, 'generator.pth'))
     torch.save(discriminator.state_dict(), os.path.join(dirpath, 'discriminator.pth'))
     
+    # restore back to original device
+    generator.to(get_device())
+    discriminator.to(get_device())
+    
     # save images
     save_image(denormalize(fake_images), os.path.join(dirpath, fake_fname), nrow=8)
     
