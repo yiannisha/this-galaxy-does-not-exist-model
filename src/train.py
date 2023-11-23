@@ -5,19 +5,22 @@ from training import Trainer
 
 if __name__ == '__main__':
     
+    device = get_device()
+    print('device: ', device)
+    
     # set hyperparameters
     batch_size = 1
     latent_size = 2048
     
     # create new models
-    gen = to_device(Generator(latent_size=latent_size), get_device())
-    discr = to_device(Discriminator(), get_device())
+    gen = to_device(Generator(latent_size=latent_size), device)
+    discr = to_device(Discriminator(), device)
     
     # downlaod/load dataset
     hugging_face_dataset = download()
-    dataset = NebulaDataset(hugging_face_dataset[:10])
+    dataset = NebulaDataset(hugging_face_dataset)
     
     # train the models
-    trainer = Trainer(discr, gen, dataset, latent_size, batch_size)
+    trainer = Trainer(discr, gen, dataset, latent_size, batch_size, device)
     
     trainer.fit(epochs=25, lr=0.0002, start_idx=1)

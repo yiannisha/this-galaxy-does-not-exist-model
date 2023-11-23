@@ -4,7 +4,7 @@ from torch.nn import functional as F
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms as T
 
-from utils import get_device, save_samples, DeviceDataLoader
+from utils import save_samples, DeviceDataLoader
 
 from typing import Tuple, List
 
@@ -13,7 +13,7 @@ class Trainer:
     A class for training the model.
     '''
     
-    def __init__ ( self, discriminator: nn.Module, generator: nn.Module, dataset: Dataset, latent_size: int, batch_size: int ) -> None:
+    def __init__ ( self, discriminator: nn.Module, generator: nn.Module, dataset: Dataset, latent_size: int, batch_size: int, device: torch.device) -> None:
         '''
         :param discriminator: The discriminator model.
         :param generator: The generator model.
@@ -21,6 +21,8 @@ class Trainer:
         :param latent_size: The size of the latent space.
         :param batch_size: The batch size.
         '''
+        
+        self.device = device
         
         # save the models
         self.discriminator = discriminator
@@ -30,7 +32,7 @@ class Trainer:
         self.dataset = dataset
         self.dataloader = DeviceDataLoader(
             DataLoader(self.dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True),
-            get_device()
+            self.device
         )
         
         # save the latent size
@@ -38,6 +40,7 @@ class Trainer:
         
         # save the batch size
         self.batch_size = batch_size
+        
         
     def train_discriminator (self, opt_d: torch.optim.Optimizer, images: torch.Tensor) -> Tuple[float, float, float]:
         '''
@@ -49,16 +52,16 @@ class Trainer:
 
         # Pass real images through discriminator
         real_preds = self.discriminator(images)
-        real_targets = torch.ones(images.size(0), 1, device=get_device())
+        real_targets = torch.ones(images.size(0), 1, device=self.device)
         real_loss = F.binary_cross_entropy(real_preds, real_targets)
         real_score = torch.mean(real_preds).item()
         
         # Generate fake images
-        latent = torch.randn(self.batch_size, self.latent_size, 1, 1, device=get_device())
+        latent = torch.randn(self.batch_size, self.latent_size, 1, 1, device=self.device)
         fake_images = self.generator(latent)
 
         # Pass fake images through discriminator
-        fake_targets = torch.zeros(fake_images.size(0), 1, device=get_device())
+        fake_targets = torch.zeros(fake_images.size(0), 1, device=self.device)
         fake_preds = self.discriminator(fake_images)
         fake_loss = F.binary_cross_entropy(fake_preds, fake_targets)
         fake_score = torch.mean(fake_preds).item()
@@ -79,12 +82,12 @@ class Trainer:
         opt_g.zero_grad()
 
         # Generate fake images
-        latent = torch.randn(self.batch_size, self.latent_size, 1, 1, device=get_device())
+        latent = torch.randn(self.batch_size, self.latent_size, 1, 1, device=self.device)
         fake_images = self.generator(latent)
 
         # Try to fool the discriminator
         preds = self.discriminator(fake_images)
-        targets = torch.ones(self.batch_size, 1, device=get_device())
+        targets = torch.ones(self.batch_size, 1, device=self.device)
         loss = F.binary_cross_entropy(preds, targets)
 
         # Update generator weights

@@ -28,7 +28,7 @@ def save_samples(index: int, generator: nn.Module, discriminator: nn.Module, lat
     fake_fname = 'generated-images-{0:0=4d}.png'.format(index)
     
     # create checkppoint directory
-    dirpath = os.path.join(os.path.dirname(__file__), '..', 'models', f'checkpoint-{index}')
+    dirpath = os.path.join(os.path.dirname(__file__), '..', '..', 'models', f'checkpoint-{index}')
     os.makedirs(dirpath, exist_ok=True)
     
     # save models
